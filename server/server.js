@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var {isEmail} = require('validator');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/TodoApp');
@@ -51,7 +52,8 @@ var User = mongoose.model('User', {
     type: String,
     required: true,
     minlength: 1,
-    trim : true
+    trim : true,
+    validate: [ isEmail, 'invalid email' ]
   },
   password: {
     type: String
