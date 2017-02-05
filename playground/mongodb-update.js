@@ -8,7 +8,7 @@ MongoClient.connect(MONGO_URL, (err, db) => {
   }
   console.log('Connected to mongodb server');
 
-  db.collection('Todos').findOneAndUpdate({
+  /*db.collection('Todos').findOneAndUpdate({
     _id : ObjectID('588486376542f677214e7faf')
   }, {
     $set :{
@@ -18,7 +18,18 @@ MongoClient.connect(MONGO_URL, (err, db) => {
     returnOriginal: false
   }).then((result) => {
       console.log(result);
-    });
+  });*/
+
+  db.collection('Users').findOneAndUpdate({
+    _id : ObjectID('588489ac6542f677214e7fb1')
+  }, {
+    $inc : { age : 5 },
+    $set :{ name: 'Juan Zuriaga' }
+  }, {
+    returnOriginal: false
+  }).then((result) => {
+      console.log(result);
+  });
 
   //db.close();
 });
