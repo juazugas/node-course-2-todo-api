@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha server/**/*.test.js",
+    "tdd" : "nodemon --exec 'yarn test'"
   },
   "author": "Juan Zuriaga",
   "license": "ISC",
@@ -14,5 +15,11 @@
     "mongodb": "^2.2.21",
     "mongoose": "^4.8.1",
     "validator": "^6.2.1"
+  },
+  "devDependencies": {
+    "expect": "1.20.2",
+    "mocha": "3.2.0",
+    "nodemon": "1.11.0",
+    "supertest": "3.0.0"
   }
 }
