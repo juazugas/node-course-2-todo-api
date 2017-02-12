@@ -16,7 +16,7 @@ app.post('/todos', (req, res) => {
   });
 
   todo.save().then((doc) => {
-    console.log('Added todo ' , doc);
+    //console.log('Added todo ' , doc);
     res.send(doc);
   }, (e) =>{
     res.status(400).send(e);
