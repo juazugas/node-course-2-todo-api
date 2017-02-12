@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start" : "node server/server.js",
     "test": "mocha server/**/*.test.js",
     "tdd" : "nodemon --exec 'yarn test'"
+  },
+  "engines": {
+    "node": "7.0.0"
   },
   "author": "Juan Zuriaga",
   "license": "ISC",
