@@ -35,20 +35,23 @@ app.get('/todos/:todoId', (req, res) => {
   var todoId = req.params.todoId;
 
   if (!ObjectID.isValid(todoId)) {
-    res.status(404).send({
+    return res.status(404).send({
       message: `Id not valid ${todoId}`
     });
+
   }
 
   // Find by Id
-  Todo.findById(todoId).then((doc) => {
-      if (!doc) {
-        res.status(404).send({
+  Todo.findById(todoId).then((todo) => {
+      if (!todo) {
+        return res.status(404).send({
           message: `Id not found ${todoId}`
         });
       }
-      res.send(doc);
-    } , (e) => res.status(400).send(e));
+      res.send({todo});
+  }, (e) => {
+    res.status(400).send(e);
+  });
 
 });
 
