@@ -66,14 +66,14 @@ app.delete('/todos/:todoId', (req, res) => {
   }
 
   //remove by id
-  Todo.findOneAndRemove(todoId).then((todo) => {
+  Todo.findOneAndRemove({_id:todoId}).then((todo) => {
     if (!todo) {
       return res.status(404).send({
         message: `Id not found ${todoId}`
       });
     }
     // success
-    res.send(todo);
+    res.send({todo});
   }, (e) => {
     // 400 with empty body
     res.status(400).send(e);
