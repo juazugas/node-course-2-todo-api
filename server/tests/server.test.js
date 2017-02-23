@@ -14,10 +14,11 @@ beforeEach(populateTodos);
 describe('POST /todos' , () => {
 
   it('should create a new todo', (done) => {
-    var text = 'Text todo text';
+    let text = 'Text todo text';
 
     request(app)
       .post('/todos')
+      .set('x-auth', users[0].tokens[0].token)
       .send({ text })
       .expect(200)
       .expect((res) => {
@@ -40,6 +41,7 @@ describe('POST /todos' , () => {
 
     request(app)
       .post('/todos')
+      .set('x-auth', users[0].tokens[0].token)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -68,11 +70,12 @@ describe('GET /todos', () => {
 
     request(app)
       .get('/todos')
+      .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
-        expect(res.body.todos.length).toBe(todos.length);
+        expect(res.body.todos.length).toBe(1);
       })
-      .end(done());
+      .end(done);
 
   });
 
@@ -80,10 +83,9 @@ describe('GET /todos', () => {
 
 describe('GET /todos/:id', () => {
 
-
   it('should get the todo by id', (done) => {
 
-    const testId = todos[0]._id.toHexString();
+    let testId = todos[0]._id.toHexString();
 
     request(app)
       .get(`/todos/${testId}`)
@@ -98,10 +100,10 @@ describe('GET /todos/:id', () => {
 
   it('should get return 404 when id not found', (done) => {
 
-    const testId = new ObjectID();
+    let notFoundId = new ObjectID();
 
     request(app)
-      .get(`/todos/${testId}`)
+      .get(`/todos/${notFoundId}`)
       .expect(404)
       .expect((res) => {
         expect(res.body.message).toInclude('not found');
@@ -112,10 +114,10 @@ describe('GET /todos/:id', () => {
 
   it('should get return 404 when id is invalid', (done) => {
 
-    const testId = 'INVALIDID934865793845793874';
+    let invalidId = 'INVALIDID934865793845793874';
 
     request(app)
-      .get(`/todos/${testId}`)
+      .get(`/todos/${invalidId}`)
       .expect(404)
       .expect((res) => {
         expect(res.body.message).toInclude('not valid');
@@ -130,7 +132,7 @@ describe('DELETE /todos/:id', ()  => {
 
   it('should remove the todo', (done) => {
 
-    const hexId = todos[0]._id.toHexString();
+    let hexId = todos[0]._id.toHexString();
 
     request(app)
       .delete(`/todos/${hexId}`)
@@ -154,7 +156,7 @@ describe('DELETE /todos/:id', ()  => {
 
   it('should get return 404 when id not found', (done) => {
 
-    const notFoundId = new ObjectID();
+    let notFoundId = new ObjectID();
 
     request(app)
       .delete(`/todos/${notFoundId}`)
@@ -168,7 +170,7 @@ describe('DELETE /todos/:id', ()  => {
 
   it('should get return 404 when id is invalid', (done) => {
 
-    const invalidId = 'INVALIDID934865793845793874';
+    let invalidId = 'INVALIDID934865793845793874';
 
     request(app)
       .delete(`/todos/${invalidId}`)
@@ -186,9 +188,9 @@ describe('PATCH /todos/:id' , () => {
 
   it('should update the todo', (done) => {
 
-    const hexId = todos[0]._id.toHexString();
-    const text = 'New text to do';
-    const completed = true;
+    let hexId = todos[0]._id.toHexString();
+    let text = 'New text to do';
+    let completed = true;
 
     request(app)
       .patch(`/todos/${hexId}`)
@@ -221,10 +223,10 @@ describe('PATCH /todos/:id' , () => {
 
   it('should clear completedAt when todo is not completed', (done) => {
     // grab id of second todo item
-    const secondHexId = todos[1]._id.toHexString();
+    let secondHexId = todos[1]._id.toHexString();
     // update text , set completed to false
-    const text = 'New second text to do';
-    const completed = false;
+    let text = 'New second text to do';
+    let completed = false;
 
     // 200, res.body changed
     request(app)
@@ -256,7 +258,7 @@ describe('PATCH /todos/:id' , () => {
 
   it('should get return 404 when id not found', (done) => {
 
-    const notFoundId = new ObjectID();
+    let notFoundId = new ObjectID();
 
     request(app)
       .patch(`/todos/${notFoundId}`)
@@ -270,7 +272,7 @@ describe('PATCH /todos/:id' , () => {
 
   it('should get return 404 when id is invalid', (done) => {
 
-    const invalidId = 'INVALIDID934865793845793874';
+    let invalidId = 'INVALIDID934865793845793874';
 
     request(app)
       .patch(`/todos/${invalidId}`)
@@ -323,8 +325,8 @@ describe('GET /users/me', () => {
 describe('POST /users', () => {
 
   it('should create a user', (done) => {
-    var email = 'example@example.com';
-    var password = '123abc!';
+    let email = 'example@example.com';
+    let password = '123abc!';
 
     request(app)
       .post('/users')
@@ -368,7 +370,7 @@ describe('POST /users', () => {
   });
 
   it('should not create user if email in use', (done) => {
-    var repEmail = users[0].email;
+    let repEmail = users[0].email;
 
     request(app)
       .post('/users')
@@ -387,7 +389,7 @@ describe('POST /users', () => {
 describe('POST /users/login', () => {
 
   it('should login user and return auth token', (done) => {
-    var { email, password } = users[1];
+    let { email, password } = users[1];
 
     request(app)
       .post('/users/login')

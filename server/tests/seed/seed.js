@@ -23,19 +23,15 @@ const users = [{
 
 const todos = [{
   _id: new ObjectID(),
-  text: 'First text to do'
+  text: 'First text to do',
+  _creator: userOneId
 },{
   _id: new ObjectID(),
   text: 'Second text to do',
   completed: true,
-  completedAt: 333
+  completedAt: 333,
+  _creator: userTwoId
 }];
-
-const populateTodos = (done) => {
-  Todo.remove({}).then(() => {
-    Todo.insertMany(todos).then(() => done());
-  });
-};
 
 const populateUsers = (done) => {
   User.remove({}).then(() => {
@@ -43,7 +39,14 @@ const populateUsers = (done) => {
     var userTwo = new User(users[1]).save();
 
     return Promise.all([userOne, userTwo]);
-  }).then(() => done());
+  }).then(() => done()).catch((e) => done(e));
 };
+
+const populateTodos = (done) => {
+  Todo.remove({}).then(() => {
+    Todo.insertMany(todos).then(() => done());
+  });
+};
+
 
 module.exports = { todos, users, populateTodos, populateUsers };
