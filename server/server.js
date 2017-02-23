@@ -30,14 +30,14 @@ app.post('/todos', authenticate, (req, res) => {
 app.get('/todos', authenticate, (req, res) => {
   Todo.find({
     _creator: req.user._id
-  }).then((docs) => {
-    res.send({docs});
+  }).then((todos) => {
+    res.send({todos});
   }, (e) => {
     res.status(400).send(e);
   });
 });
 
-app.get('/todos/:todoId', (req, res) => {
+app.get('/todos/:todoId', authenticate, (req, res) => {
   var todoId = req.params.todoId;
 
   if (!ObjectID.isValid(todoId)) {
@@ -48,7 +48,10 @@ app.get('/todos/:todoId', (req, res) => {
   }
 
   // Find by Id
-  Todo.findById(todoId).then((todo) => {
+  Todo.findOne({
+    _id: todoId,
+    _creator: req.user._id
+  }).then((todo) => {
       if (!todo) {
         return res.status(404).send({
           message: `Id not found ${todoId}`
@@ -61,7 +64,7 @@ app.get('/todos/:todoId', (req, res) => {
 
 });
 
-app.delete('/todos/:todoId', (req, res) => {
+app.delete('/todos/:todoId', authenticate, (req, res) => {
   var todoId = req.params.todoId;
 
   //validate id , if is not valid return 404
@@ -72,7 +75,10 @@ app.delete('/todos/:todoId', (req, res) => {
   }
 
   //remove by id
-  Todo.findOneAndRemove({_id:todoId}).then((todo) => {
+  Todo.findOneAndRemove({
+    _id:todoId,
+    _creator:req.user._id
+  }).then((todo) => {
     if (!todo) {
       return res.status(404).send({
         message: `Id not found ${todoId}`
@@ -86,7 +92,7 @@ app.delete('/todos/:todoId', (req, res) => {
   });
 });
 
-app.patch('/todos/:todoId', (req, res) => {
+app.patch('/todos/:todoId', authenticate, (req, res) => {
   var todoId = req.params.todoId;
   var body = _.pick(req.body, ['text', 'completed']);
 
@@ -104,7 +110,9 @@ app.patch('/todos/:todoId', (req, res) => {
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(todoId, {$set: body}, {new: true}).then((todo) => {
+  Todo.findOneAndUpdate({
+    _id: todoId, _creator: req.user._id
+  }, {$set: body}, {new: true}).then((todo) => {
     if (!todo) {
       return res.status(404).send({
         message: `Id not found ${todoId}`
